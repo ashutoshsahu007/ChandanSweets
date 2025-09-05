@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 export default function Header({ searchTerm, setSearchTerm }) {
   const cart = useSelector((state) => state.cart.items);
   const count = cart.length;
-  console.log(cart, "carrtttttt");
 
   return (
     <header className="bg-white sticky top-0 z-10 shadow-md px-4 py-3 flex items-center justify-between">
@@ -16,7 +15,6 @@ export default function Header({ searchTerm, setSearchTerm }) {
           ChandanSweets
         </div>
       </Link>
-      {console.log("searchTerm header", searchTerm)}
 
       {/* Search Bar - hidden on small screens */}
       <div className="hidden sm:flex items-center w-1/2 max-w-md border rounded-lg px-3 py-2">

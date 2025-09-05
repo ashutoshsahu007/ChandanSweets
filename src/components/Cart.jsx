@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../store/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { addToCartAsync } from "../store/cartActions";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cart.items);
@@ -9,6 +10,16 @@ export default function Cart() {
 
   // Calculate total
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const { userId, token } = useSelector((state) => state.auth);
+
+  const items = useSelector((state) => state.cart.items);
+
+  console.log("items", items);
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCartAsync(userId, token, product));
+  };
 
   return (
     <div className="min-h-screen ">
@@ -49,7 +60,7 @@ export default function Cart() {
                   </button>
                   <span className="font-semibold">{item.quantity}</span>
                   <button
-                    onClick={() => dispatch(cartActions.addToCart(item))}
+                    onClick={() => handleAddToCart(item)}
                     className="px-3 py-1 border rounded-md text-lg cursor-pointer"
                   >
                     +

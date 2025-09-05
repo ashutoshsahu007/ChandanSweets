@@ -11,7 +11,7 @@ export default function Profile() {
   const [edit, setEdit] = useState(false);
 
   const token = useSelector((state) => state.auth.token);
-  const darkMode = useSelector((state) => state.theme.darkMode);
+  const darkMode = false;
 
   useEffect(() => {
     const fetchuserDetails = async () => {

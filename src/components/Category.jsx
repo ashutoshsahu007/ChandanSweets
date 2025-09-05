@@ -1,8 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { menuData } from "../data/menuData";
-import { useDispatch } from "react-redux";
-import { cartActions } from "../store/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCartAsync } from "../store/cartActions";
 
 export default function Category({ searchTerm }) {
   const { resId } = useParams();
@@ -14,8 +14,12 @@ export default function Category({ searchTerm }) {
     res.name.toLowerCase().includes(searchTerm?.toLowerCase())
   );
 
+  const { userId, token } = useSelector((state) => state.auth);
+
+  const items = useSelector((state) => state.cart.items);
+
   const handleAddToCart = (product) => {
-    dispatch(cartActions.addToCart(product));
+    dispatch(addToCartAsync(userId, token, product));
   };
 
   if (!category) {

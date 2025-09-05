@@ -3,10 +3,10 @@ import ForgotPassword from "./components/ForgetPassword";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import UpdateProfile from "./components/Profile";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cart from "./components/Cart";
 import OrderHistory from "./components/OrderHistory";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Menu from "./components/Menu";
 import Category from "./components/Category";
@@ -14,11 +14,35 @@ import Profile from "./components/Profile";
 import Checkout from "./components/CheckOut";
 import OrderConfirmation from "./components/OrderConfirmation";
 import NotFound from "./components/NotFound";
+import { cartActions } from "./store/cartSlice";
 
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
   const [searchTerm, setSearchTerm] = useState("");
+  const dispatch = useDispatch();
+
+  const { userId, token } = useSelector((state) => state.auth);
+
+  // useEffect(() => {
+  //   fetch(
+  //     `https://restro-a8f84-default-rtdb.firebaseio.com/carts/${userId}.json?auth=${token}`
+  //   )
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (!data) {
+  //         dispatch(cartActions.setCart([]));
+  //         return;
+  //       }
+
+  //       const loadedCart = Object.keys(data).map((key) => ({
+  //         ...data[key],
+  //       }));
+
+  //       console.log(loadedCart, "loadedcartttttt");
+
+  //       dispatch(cartActions.setCart(loadedCart));
+  //     });
+  // }, [userId, token, dispatch]);
 
   return (
     <>

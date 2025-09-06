@@ -16,6 +16,8 @@ import OrderConfirmation from "./components/OrderConfirmation";
 import NotFound from "./components/NotFound";
 import { cartActions } from "./store/cartSlice";
 
+let isInitial = false;
+
 const App = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,26 +25,37 @@ const App = () => {
 
   const { userId, token } = useSelector((state) => state.auth);
 
-  // useEffect(() => {
-  //   fetch(
-  //     `https://restro-a8f84-default-rtdb.firebaseio.com/carts/${userId}.json?auth=${token}`
-  //   )
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       if (!data) {
-  //         dispatch(cartActions.setCart([]));
-  //         return;
-  //       }
+  const cartItems = useSelector((state) => state.cart.items);
+  const changed = useSelector((state) => state.cart.changed);
 
-  //       const loadedCart = Object.keys(data).map((key) => ({
-  //         ...data[key],
-  //       }));
+  useEffect(() => {
+    const syncCartAsync = () => {
+      fetch(
+        `https://restro-a8f84-default-rtdb.firebaseio.com/users/${userId}/cart.json?auth=${token}`,
+        {
+          method: "PUT", // overwrite entire cart
+          body: JSON.stringify(cartItems),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    };
+    if (!isInitial) {
+      isInitial = true;
+      return;
+    }
 
-  //       console.log(loadedCart, "loadedcartttttt");
+    if (changed) {
+      syncCartAsync();
+    }
+  }, [cartItems, userId]);
 
-  //       dispatch(cartActions.setCart(loadedCart));
-  //     });
-  // }, [userId, token, dispatch]);
+  useEffect(() => {
+    fetch(
+      `https://restro-a8f84-default-rtdb.firebaseio.com/users/${userId}/cart.json?auth=${token}`
+    )
+      .then((res) => res.json())
+      .then((data) => dispatch(cartActions.setCart(data)));
+  }, [userId]);
 
   return (
     <>

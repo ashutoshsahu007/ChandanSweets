@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { cartActions } from "../store/cartSlice";
 import { useNavigate } from "react-router-dom";
-import { addToCartAsync } from "../store/cartActions";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cart.items);
@@ -15,10 +14,8 @@ export default function Cart() {
 
   const items = useSelector((state) => state.cart.items);
 
-  console.log("items", items);
-
   const handleAddToCart = (product) => {
-    dispatch(addToCartAsync(userId, token, product));
+    dispatch(cartActions.addToCart(product));
   };
 
   return (

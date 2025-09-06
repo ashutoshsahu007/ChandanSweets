@@ -2,7 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import { useParams, Link } from "react-router-dom";
 import { menuData } from "../data/menuData";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCartAsync } from "../store/cartActions";
+import { cartActions } from "../store/cartSlice";
 
 export default function Category({ searchTerm }) {
   const { resId } = useParams();
@@ -16,10 +16,22 @@ export default function Category({ searchTerm }) {
 
   const { userId, token } = useSelector((state) => state.auth);
 
-  const items = useSelector((state) => state.cart.items);
+  const cartItems = useSelector((state) => state.cart.items);
 
   const handleAddToCart = (product) => {
-    dispatch(addToCartAsync(userId, token, product));
+    dispatch(cartActions.addToCart(product));
+  };
+
+  // Save Redux cart to Firebase
+  const syncCartAsync = (userId, token, cartItems) => async () => {
+    await fetch(
+      `https://restro-a8f84-default-rtdb.firebaseio.com/users/${userId}/cart.json?auth=${token}`,
+      {
+        method: "PUT", // overwrite entire cart
+        body: JSON.stringify(cartItems),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   };
 
   if (!category) {

@@ -5,6 +5,7 @@ import cartReducer from "./cartSlice";
 const storedToken = localStorage.getItem("token");
 const storedUserId = localStorage.getItem("userId");
 const storedLoginTime = Number(localStorage.getItem("loginTime"));
+const storedEmail = localStorage.getItem("email");
 
 let isLoggedIn = false;
 
@@ -16,6 +17,7 @@ const preloadedState = {
   auth: {
     token: storedToken,
     userId: storedUserId,
+    email: storedEmail,
     isLoggedIn,
   },
 };

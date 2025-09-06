@@ -58,12 +58,17 @@ const Auth = () => {
         });
       })
       .then((data) => {
-        dispatch(
-          authActions.login({ token: data.idToken, userId: data.localId })
-        );
-        !isLogin && alert("SignUp Successfull");
-        isLogin && navigate("/expense");
+        isLogin &&
+          dispatch(
+            authActions.login({
+              token: data.idToken,
+              userId: data.localId,
+              email: data.email,
+            })
+          );
 
+        console.log(data, "dataaaaaaaaaaaa");
+        !isLogin && alert("SignUp Successfull");
         setEmail("");
         setPassword("");
         setConfirmPassword("");

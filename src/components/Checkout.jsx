@@ -21,11 +21,6 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Order Placed:", { cartItems, ...form });
-  };
-
   // Calculate total
   const totalAmount = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -59,17 +54,21 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-3xl rounded-lg shadow-lg p-6">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-100 flex items-center justify-center p-6">
+      <div className="bg-white w-full max-w-3xl rounded-2xl shadow-lg p-8">
         {/* Title */}
-        <h2 className="text-2xl font-bold mb-6">Checkout</h2>
+        <h2 className="text-3xl font-extrabold text-orange-700 mb-8 drop-shadow-sm">
+          🧾 Checkout
+        </h2>
 
         {/* Order Summary */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+        <div className="mb-8">
+          <h3 className="text-lg font-bold text-gray-800 mb-4">
+            Order Summary
+          </h3>
 
           {cartItems.length === 0 ? (
-            <p className="text-gray-500">Your cart is empty.</p>
+            <p className="text-gray-500 text-center">Your cart is empty 🍽️</p>
           ) : (
             <>
               {cartItems.map((item) => (
@@ -81,32 +80,34 @@ const Checkout = () => {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-16 h-16 rounded object-cover"
+                      className="w-16 h-16 rounded-lg object-cover shadow-md"
                     />
                     <div>
-                      <p className="font-medium">{item.name}</p>
+                      <p className="font-semibold text-gray-800">{item.name}</p>
                       <p className="text-sm text-gray-500">
                         Quantity: {item.quantity}
                       </p>
                     </div>
                   </div>
-                  <p className="font-semibold">
-                    ${(item.price * item.quantity).toFixed(2)}
+                  <p className="font-bold text-orange-600">
+                    ₹{(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
               ))}
 
-              <div className="flex justify-between mt-4 text-lg font-semibold">
+              <div className="flex justify-between mt-4 text-lg font-extrabold text-gray-800">
                 <span>Total</span>
-                <span>${totalAmount.toFixed(2)}</span>
+                <span className="text-orange-600">
+                  ₹{totalAmount.toFixed(2)}
+                </span>
               </div>
             </>
           )}
         </div>
 
         {/* Delivery Address */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <h3 className="text-lg font-semibold">Delivery Address</h3>
+        <form onSubmit={handlePlaceOrder} className="space-y-4">
+          <h3 className="text-lg font-bold text-gray-800">Delivery Address</h3>
 
           <input
             type="text"
@@ -114,7 +115,7 @@ const Checkout = () => {
             placeholder="Street Address *"
             value={form.street}
             onChange={handleChange}
-            className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-orange-400 outline-none"
             required
           />
 
@@ -125,7 +126,7 @@ const Checkout = () => {
               placeholder="City *"
               value={form.city}
               onChange={handleChange}
-              className="border rounded p-2 focus:ring-2 focus:ring-blue-500"
+              className="border rounded-xl p-3 focus:ring-2 focus:ring-orange-400 outline-none"
               required
             />
             <input
@@ -134,7 +135,7 @@ const Checkout = () => {
               placeholder="State *"
               value={form.state}
               onChange={handleChange}
-              className="border rounded p-2 focus:ring-2 focus:ring-blue-500"
+              className="border rounded-xl p-3 focus:ring-2 focus:ring-orange-400 outline-none"
               required
             />
             <input
@@ -143,7 +144,7 @@ const Checkout = () => {
               placeholder="ZIP Code *"
               value={form.zip}
               onChange={handleChange}
-              className="border rounded p-2 focus:ring-2 focus:ring-blue-500"
+              className="border rounded-xl p-3 focus:ring-2 focus:ring-orange-400 outline-none"
               required
             />
           </div>
@@ -154,7 +155,7 @@ const Checkout = () => {
             placeholder="Phone Number *"
             value={form.phone}
             onChange={handleChange}
-            className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-orange-400 outline-none"
             required
           />
 
@@ -163,16 +164,15 @@ const Checkout = () => {
             placeholder="Delivery Instructions (Optional)"
             value={form.instructions}
             onChange={handleChange}
-            className="w-full border rounded p-2 focus:ring-2 focus:ring-blue-500"
+            className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-orange-400 outline-none"
             rows="3"
           />
 
           <button
             type="submit"
-            onClick={handlePlaceOrder}
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
+            className="w-full bg-orange-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-orange-600 transition-all"
           >
-            Place Order
+            Place Order 🍔
           </button>
         </form>
       </div>

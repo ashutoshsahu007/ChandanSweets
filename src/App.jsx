@@ -8,13 +8,13 @@ import Cart from "./components/Cart";
 import OrderHistory from "./components/OrderHistory";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
-import Menu from "./components/Menu";
-import Category from "./components/Category";
 import Profile from "./components/Profile";
 import Checkout from "./components/CheckOut";
 import OrderConfirmation from "./components/OrderConfirmation";
 import NotFound from "./components/NotFound";
 import { cartActions } from "./store/cartSlice";
+import Recepies from "./components/Recepies";
+import Categories from "./components/Categories";
 
 let isInitial = false;
 
@@ -65,23 +65,25 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={!isLoggedIn ? <Auth /> : <Navigate to="/menu" replace />}
+          element={
+            !isLoggedIn ? <Auth /> : <Navigate to="/categories" replace />
+          }
         />
         <Route
-          path="/menu"
+          path="/categories"
           element={
             isLoggedIn ? (
-              <Menu searchTerm={searchTerm} />
+              <Categories searchTerm={searchTerm} />
             ) : (
               <Navigate to="/" replace />
             )
           }
         />
         <Route
-          path="/menu/:resId"
+          path="/categories/:resId"
           element={
             isLoggedIn ? (
-              <Category searchTerm={searchTerm} />
+              <Recepies searchTerm={searchTerm} />
             ) : (
               <Navigate to="/" replace />
             )

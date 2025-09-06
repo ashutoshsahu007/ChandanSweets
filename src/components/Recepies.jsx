@@ -4,7 +4,7 @@ import { menuData } from "../data/menuData";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
 
-export default function Category({ searchTerm }) {
+export default function Recepies({ searchTerm }) {
   const { resId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -16,64 +16,73 @@ export default function Category({ searchTerm }) {
   );
 
   const cartItems = useSelector((state) => state.cart.items);
-  console.log(cartItems, "cartItemsssssss");
 
   const handleAddToCart = (product) => {
     dispatch(cartActions.addToCart(product));
   };
 
   if (!category) {
-    return <div className="p-6 text-red-600">Category not found</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 text-orange-600 font-semibold text-xl">
+        Category not found 🍔
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-6 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-100 px-6 py-8">
       {/* Back link */}
       <Link
-        to="/menu"
-        className="flex items-center text-indigo-600 text-sm font-medium mb-6 hover:underline"
+        to="/categories"
+        className="flex items-center text-orange-600 text-sm font-medium mb-6 hover:text-orange-700 transition-colors"
       >
-        <ArrowLeft size={16} className="mr-1" />
+        <ArrowLeft size={18} className="mr-1" />
         Back to Categories
       </Link>
 
       {/* Category Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-8">
         <img
           src={categoryData.image}
           alt={categoryData.title}
-          className="w-12 h-12 rounded-md object-cover"
+          className="w-14 h-14 rounded-xl object-cover shadow-md"
         />
-        <h1 className="text-2xl font-bold">{categoryData.title}</h1>
+        <h1 className="text-3xl font-extrabold text-orange-700 drop-shadow-sm">
+          {categoryData.title}
+        </h1>
       </div>
 
       {/* Product Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {category.map((product) => (
           <div
             key={product.id}
-            className="max-w-sm bg-white rounded-xl shadow-md overflow-hidden"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
           >
             <img
               src={product.image}
               alt={product.name}
               className="w-full h-48 object-cover"
             />
-            <div className="p-4">
-              <h2 className="text-lg font-semibold">{product.name}</h2>
+            <div className="p-5">
+              <h2 className="text-lg font-bold text-gray-800">
+                {product.name}
+              </h2>
 
               {/* Ingredients */}
-              <p className="mt-2 text-sm font-medium">Ingredients:</p>
-              <ul className="list-disc list-inside text-sm text-gray-700">
+              <p className="mt-2 text-sm font-semibold text-orange-600">
+                Ingredients:
+              </p>
+              <ul className="list-disc list-inside text-sm text-gray-600">
                 {product.ingredients.map((ing, i) => (
                   <li key={i}>{ing}</li>
                 ))}
               </ul>
 
               {/* Price + Button */}
-              <div className="mt-4 flex items-center justify-between">
+              <div className="mt-5 flex items-center justify-between">
                 <div>
-                  <p className="text-indigo-600 font-bold text-lg">
+                  <p className="text-orange-600 font-bold text-lg">
                     ₹{product.price}.00
                   </p>
                   <p className="text-xs text-gray-500">
@@ -84,14 +93,14 @@ export default function Category({ searchTerm }) {
                 {cartItems.some((item) => item.id == product.id) ? (
                   <button
                     onClick={() => navigate("/cart")}
-                    className="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer"
+                    className="bg-orange-500 text-white text-sm px-4 py-2 rounded-xl shadow-md hover:bg-orange-600 transition-all"
                   >
                     Go To Cart
                   </button>
                 ) : (
                   <button
                     onClick={() => handleAddToCart(product)}
-                    className="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer"
+                    className="bg-orange-500 text-white text-sm px-4 py-2 rounded-xl shadow-md hover:bg-orange-600 transition-all"
                   >
                     Add To Cart
                   </button>

@@ -7,10 +7,8 @@ const OrderConfirmation = () => {
   const location = useLocation();
   const cartItems = useSelector((state) => state.cart.items || []);
 
-  // 1) try router state
   const orderFromState = location.state?.order ?? null;
 
-  // 2) try localStorage (if checkout saved it there)
   let orderFromStorage = null;
   try {
     const raw = localStorage.getItem("lastOrder");
@@ -19,7 +17,6 @@ const OrderConfirmation = () => {
     orderFromStorage = null;
   }
 
-  // 3) fallback to building minimal order from cart
   const fallbackOrder = cartItems.length
     ? {
         id: null,
@@ -37,7 +34,6 @@ const OrderConfirmation = () => {
 
   const order = orderFromState || orderFromStorage || fallbackOrder;
 
-  // 🔹 Generate random ID if not provided
   const orderId = useMemo(() => {
     if (order?.id) return order.id;
     const randomStr = Math.random().toString(36).substring(2, 10);
@@ -52,7 +48,7 @@ const OrderConfirmation = () => {
 
   const badgeClass = (status) => {
     const s = String(status ?? "").toLowerCase();
-    const base = "px-3 py-1 text-sm rounded-full";
+    const base = "px-3 py-1 text-sm rounded-full font-medium";
     if (s.includes("deliv") || s.includes("comp") || s.includes("paid"))
       return `${base} bg-green-100 text-green-700`;
     if (s.includes("pend") || s.includes("process"))
@@ -64,24 +60,30 @@ const OrderConfirmation = () => {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 text-center">
-          <h2 className="text-2xl font-bold mb-4">No recent order found</h2>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 p-4">
+        <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-6 text-center">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png"
+            alt="No Order"
+            className="w-28 h-28 mx-auto animate-bounce mb-4"
+          />
+          <h2 className="text-3xl font-bold text-orange-600 mb-2">
+            No Recent Order Found
+          </h2>
           <p className="text-gray-600 mb-6">
-            We couldn't find an order to show. If you just placed an order, make
-            sure the checkout passed the order to this page (via router state)
-            or saved it to localStorage under <code>lastOrder</code>.
+            We couldn’t find an order. If you just placed one, make sure it was
+            passed to this page or saved in <code>lastOrder</code>.
           </p>
           <div className="flex justify-center gap-4">
             <Link
               to="/"
-              className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition"
+              className="px-6 py-3 bg-orange-500 text-white rounded-xl shadow-lg hover:bg-orange-600 transition"
             >
-              Continue Shopping
+              Back to Home
             </Link>
             <Link
               to="/orders"
-              className="bg-gray-700 text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition"
+              className="px-6 py-3 bg-gray-700 text-white rounded-xl shadow-lg hover:bg-gray-800 transition"
             >
               View Orders
             </Link>
@@ -110,32 +112,42 @@ const OrderConfirmation = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white w-full max-w-3xl rounded-lg shadow-lg p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 p-4">
+      <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-6">
         <div className="text-center mb-6">
-          <h2 className="text-3xl font-bold text-green-600">
-            🎉 Order Confirmed
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/1046/1046784.png"
+            alt="Order Confirmed"
+            className="w-28 h-28 mx-auto animate-bounce mb-4"
+          />
+          <h2 className="text-3xl font-extrabold text-orange-600">
+            🎉 Order Confirmed!
           </h2>
           <p className="text-gray-600 mt-2">
-            Thanks — we've received your order. Below are the details.
+            Thanks — your delicious food is on its way.
           </p>
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-4 border mb-6">
+        {/* Order Info */}
+        <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-200 mb-6">
           <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-500">Order #{orderId}</p>
+            <p className="text-sm text-gray-700 font-medium">
+              Order <span className="font-semibold">#{orderId}</span>
+            </p>
             <span className={badgeClass(status)}>{status ?? "Pending"}</span>
           </div>
           {createdAt && (
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-gray-500 mt-2">
               Placed: {new Date(createdAt).toLocaleString()}
             </p>
           )}
         </div>
 
-        {/* Order Summary */}
+        {/* Items */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
+          <h3 className="text-lg font-bold text-orange-700 mb-4">
+            🛒 Order Summary
+          </h3>
 
           {items.length ? (
             items.map((item, idx) => (
@@ -148,7 +160,7 @@ const OrderConfirmation = () => {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-16 h-16 rounded object-cover"
+                      className="w-16 h-16 rounded-xl object-cover shadow"
                     />
                   )}
                   <div>
@@ -156,12 +168,9 @@ const OrderConfirmation = () => {
                     <p className="text-sm text-gray-500">
                       Qty: {item.quantity}
                     </p>
-                    {item.variant && (
-                      <p className="text-xs text-gray-400">{item.variant}</p>
-                    )}
                   </div>
                 </div>
-                <p className="font-semibold">
+                <p className="font-semibold text-gray-800">
                   {formatCurrency(
                     Number(item.price) * Number(item.quantity || 1)
                   )}
@@ -174,35 +183,39 @@ const OrderConfirmation = () => {
 
           <div className="flex justify-between text-lg font-semibold mt-4">
             <span>Total</span>
-            <span>{formatCurrency(computedTotal)}</span>
+            <span className="text-orange-600">
+              {formatCurrency(computedTotal)}
+            </span>
           </div>
         </div>
 
         {/* Delivery + Payment */}
         <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <h3 className="text-lg font-semibold mb-2">Delivery Details</h3>
+            <h3 className="text-lg font-bold text-orange-700 mb-2">
+              🚚 Delivery Details
+            </h3>
             {deliveryDetails ? (
               <>
                 {deliveryDetails.street && (
-                  <p className="text-gray-600">{deliveryDetails.street}</p>
+                  <p className="text-gray-700">{deliveryDetails.street}</p>
                 )}
                 {(deliveryDetails.city ||
                   deliveryDetails.state ||
                   deliveryDetails.zip) && (
-                  <p className="text-gray-600">
+                  <p className="text-gray-700">
                     {deliveryDetails.city ?? ""}
                     {deliveryDetails.city ? ", " : ""}
                     {deliveryDetails.state ?? ""} {deliveryDetails.zip ?? ""}
                   </p>
                 )}
                 {deliveryDetails.phone && (
-                  <p className="text-gray-600">
+                  <p className="text-gray-700">
                     Phone: {deliveryDetails.phone}
                   </p>
                 )}
                 {deliveryDetails.instructions && (
-                  <p className="text-gray-600 mt-1">
+                  <p className="text-gray-600 mt-1 italic">
                     Notes: {deliveryDetails.instructions}
                   </p>
                 )}
@@ -210,38 +223,38 @@ const OrderConfirmation = () => {
             ) : (
               <>
                 {address ? (
-                  <p className="text-gray-600">{address}</p>
+                  <p className="text-gray-700">{address}</p>
                 ) : (
                   <p className="text-gray-600">No address provided</p>
                 )}
-                {phone && <p className="text-gray-600">Phone: {phone}</p>}
+                {phone && <p className="text-gray-700">Phone: {phone}</p>}
               </>
             )}
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-2">Payment</h3>
-            <p className="text-gray-600">{paymentMethod ?? "—"}</p>
+            <h3 className="text-lg font-bold text-orange-700 mb-2">
+              💳 Payment
+            </h3>
+            <p className="text-gray-700">{paymentMethod ?? "—"}</p>
           </div>
         </div>
 
         {/* Actions */}
         <div className="flex justify-between">
           <Link
-            to="/menu"
-            className="bg-indigo-600 text-white px-5 py-2 rounded-lg hover:bg-indigo-700 transition"
+            to="/categories"
+            className="bg-orange-500 text-white px-5 py-2 rounded-xl shadow-lg hover:bg-orange-600 transition"
           >
             Continue Shopping
           </Link>
 
-          <div className="flex gap-2">
-            <Link
-              to="/order-history"
-              className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
-            >
-              View Order History
-            </Link>
-          </div>
+          <Link
+            to="/order-history"
+            className="bg-gray-700 text-white px-5 py-2 rounded-xl shadow-lg hover:bg-gray-800 transition"
+          >
+            View Order History
+          </Link>
         </div>
       </div>
     </div>

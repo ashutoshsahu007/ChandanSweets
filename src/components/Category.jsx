@@ -1,5 +1,5 @@
 import { ArrowLeft } from "lucide-react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { menuData } from "../data/menuData";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
@@ -7,6 +7,7 @@ import { cartActions } from "../store/cartSlice";
 export default function Category({ searchTerm }) {
   const { resId } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const categoryData = menuData.find((cat) => cat.id === resId);
 
@@ -14,24 +15,11 @@ export default function Category({ searchTerm }) {
     res.name.toLowerCase().includes(searchTerm?.toLowerCase())
   );
 
-  const { userId, token } = useSelector((state) => state.auth);
-
   const cartItems = useSelector((state) => state.cart.items);
+  console.log(cartItems, "cartItemsssssss");
 
   const handleAddToCart = (product) => {
     dispatch(cartActions.addToCart(product));
-  };
-
-  // Save Redux cart to Firebase
-  const syncCartAsync = (userId, token, cartItems) => async () => {
-    await fetch(
-      `https://restro-a8f84-default-rtdb.firebaseio.com/users/${userId}/cart.json?auth=${token}`,
-      {
-        method: "PUT", // overwrite entire cart
-        body: JSON.stringify(cartItems),
-        headers: { "Content-Type": "application/json" },
-      }
-    );
   };
 
   if (!category) {
@@ -92,12 +80,22 @@ export default function Category({ searchTerm }) {
                     {product.ingredients.length} ingredients
                   </p>
                 </div>
-                <button
-                  onClick={() => handleAddToCart(product)}
-                  className="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer"
-                >
-                  Add to Cart
-                </button>
+
+                {cartItems.some((item) => item.id == product.id) ? (
+                  <button
+                    onClick={() => navigate("/cart")}
+                    className="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer"
+                  >
+                    Go To Cart
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleAddToCart(product)}
+                    className="bg-indigo-600 text-white text-sm px-4 py-2 rounded-lg hover:bg-indigo-700 cursor-pointer"
+                  >
+                    Add To Cart
+                  </button>
+                )}
               </div>
             </div>
           </div>

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { cartActions } from "../store/cartSlice";
 
 const Checkout = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [form, setForm] = useState({
     street: "",
@@ -29,6 +31,32 @@ const Checkout = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+
+    if (cartItems.length === 0) {
+      alert("Your cart is empty. Please add items before placing an order.");
+      return;
+    }
+
+    if (!form.street || !form.city || !form.state || !form.zip || !form.phone) {
+      alert("Please fill in all required delivery details.");
+      return;
+    }
+
+    const order = {
+      items: cartItems,
+      deliveryDetails: form,
+      totalAmount,
+      status: "Pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    dispatch(cartActions.clearCart());
+
+    navigate("/order-confirmation", { state: { order } });
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -110,7 +138,7 @@ const Checkout = () => {
               required
             />
             <input
-              type="text"
+              type="number"
               name="zip"
               placeholder="ZIP Code *"
               value={form.zip}
@@ -121,7 +149,7 @@ const Checkout = () => {
           </div>
 
           <input
-            type="tel"
+            type="number"
             name="phone"
             placeholder="Phone Number *"
             value={form.phone}
@@ -141,8 +169,8 @@ const Checkout = () => {
 
           <button
             type="submit"
-            onClick={() => navigate("/order-confirmation")}
-            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+            onClick={handlePlaceOrder}
+            className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
           >
             Place Order
           </button>

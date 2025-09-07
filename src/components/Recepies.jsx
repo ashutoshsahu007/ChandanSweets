@@ -1,19 +1,28 @@
 import { ArrowLeft } from "lucide-react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { menuData } from "../data/menuData";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../store/cartSlice";
+
+const BASE_URL = "https://restro-a8f84-default-rtdb.firebaseio.com/recipes";
 
 export default function Recepies({ searchTerm }) {
   const { resId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [recipes, setRecipes] = useState([]);
 
-  const categoryData = menuData.find((cat) => cat.id === resId);
-
-  const category = categoryData.products.filter((res) =>
-    res.name.toLowerCase().includes(searchTerm?.toLowerCase())
-  );
+  useEffect(() => {
+    fetch(`${BASE_URL}.json`)
+      .then((res) => res.json())
+      .then((data) => {
+        const loaded = Object.entries(data || {}).map(([key, value]) => ({
+          firebaseId: key,
+          ...value,
+        }));
+        setRecipes(loaded);
+      });
+  }, []);
 
   const cartItems = useSelector((state) => state.cart.items);
 
@@ -21,10 +30,18 @@ export default function Recepies({ searchTerm }) {
     dispatch(cartActions.addToCart(product));
   };
 
-  if (!category) {
+  console.log("recepiesssssssss", recipes);
+
+  const filtered = recipes.filter(
+    (r) =>
+      r.category.toLowerCase() === resId.toLowerCase() &&
+      r.name.toLowerCase().includes(searchTerm?.toLowerCase())
+  );
+
+  if (filtered.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 text-orange-600 font-semibold text-xl">
-        Category not found 🍔
+        No recipes found 🍔
       </div>
     );
   }
@@ -40,23 +57,15 @@ export default function Recepies({ searchTerm }) {
         Back to Categories
       </Link>
 
-      {/* Category Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <img
-          src={categoryData.image}
-          alt={categoryData.title}
-          className="w-14 h-14 rounded-xl object-cover shadow-md"
-        />
-        <h1 className="text-3xl font-extrabold text-orange-700 drop-shadow-sm">
-          {categoryData.title}
-        </h1>
-      </div>
+      <h1 className="text-3xl font-extrabold text-orange-700 drop-shadow-sm mb-8">
+        {resId}
+      </h1>
 
       {/* Product Cards */}
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {category.map((product) => (
+        {filtered.map((product) => (
           <div
-            key={product.id}
+            key={product.firebaseId}
             className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
           >
             <img
@@ -68,8 +77,6 @@ export default function Recepies({ searchTerm }) {
               <h2 className="text-lg font-bold text-gray-800">
                 {product.name}
               </h2>
-
-              {/* Ingredients */}
               <p className="mt-2 text-sm font-semibold text-orange-600">
                 Ingredients:
               </p>
@@ -90,7 +97,7 @@ export default function Recepies({ searchTerm }) {
                   </p>
                 </div>
 
-                {cartItems.some((item) => item.id == product.id) ? (
+                {cartItems.some((item) => item.id === product.id) ? (
                   <button
                     onClick={() => navigate("/cart")}
                     className="bg-orange-500 text-white text-sm px-4 py-2 rounded-xl shadow-md hover:bg-orange-600 transition-all"

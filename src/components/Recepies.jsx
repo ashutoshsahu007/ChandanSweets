@@ -11,8 +11,10 @@ export default function Recepies({ searchTerm }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ Loading state
 
   useEffect(() => {
+    setLoading(true);
     fetch(`${BASE_URL}.json`)
       .then((res) => res.json())
       .then((data) => {
@@ -21,7 +23,9 @@ export default function Recepies({ searchTerm }) {
           ...value,
         }));
         setRecipes(loaded);
-      });
+        setLoading(false); // ✅ stop loading after fetch
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const cartItems = useSelector((state) => state.cart.items);
@@ -30,13 +34,20 @@ export default function Recepies({ searchTerm }) {
     dispatch(cartActions.addToCart(product));
   };
 
-  console.log("recepiesssssssss", recipes);
-
   const filtered = recipes.filter(
     (r) =>
       r.category.toLowerCase() === resId.toLowerCase() &&
       r.name.toLowerCase().includes(searchTerm?.toLowerCase())
   );
+
+  // ✅ Show loader while fetching
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 text-orange-600 font-semibold text-xl animate-pulse">
+        Loading recipes...
+      </div>
+    );
+  }
 
   if (filtered.length === 0) {
     return (

@@ -1,5 +1,4 @@
-// OrderConfirmation.jsx
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 

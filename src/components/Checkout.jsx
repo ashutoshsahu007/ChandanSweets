@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { cartActions } from "../store/cartSlice";
 
 const Checkout = () => {
   const cartItems = useSelector((state) => state.cart.items);
+  const { userId } = useSelector((state) => state.auth); // logged-in userId
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,7 +28,7 @@ const Checkout = () => {
     0
   );
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
     if (cartItems.length === 0) {
@@ -41,6 +42,7 @@ const Checkout = () => {
     }
 
     const order = {
+      userId,
       items: cartItems,
       deliveryDetails: form,
       totalAmount,
@@ -48,9 +50,35 @@ const Checkout = () => {
       createdAt: new Date().toISOString(),
     };
 
-    dispatch(cartActions.clearCart());
+    try {
+      // Save order to Firebase
+      const res = await fetch(
+        "https://<YOUR_FIREBASE_PROJECT>.firebaseio.com/orders.json",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order),
+        }
+      );
 
-    navigate("/order-confirmation", { state: { order } });
+      const data = await res.json();
+
+      if (data && data.name) {
+        // Firebase gives new key in data.name
+        const savedOrder = { id: data.name, ...order };
+
+        // Clear cart
+        dispatch(cartActions.clearCart());
+
+        // Navigate with saved order
+        navigate("/order-confirmation", { state: { order: savedOrder } });
+      } else {
+        alert("Failed to place order. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("Something went wrong while placing the order.");
+    }
   };
 
   return (

@@ -13,9 +13,10 @@ const cartSlice = createSlice({
       );
       state.changed = true;
       if (existingItem) {
-        existingItem.quantity += 1; // increase quantity if already in cart
+        existingItem.quantity += 1; // increase quantity
       } else {
-        state.items.push({ ...action.payload });
+        // ✅ Ensure quantity starts from 1
+        state.items.push({ ...action.payload, quantity: 1 });
       }
     },
     removeFromCart(state, action) {
@@ -25,17 +26,19 @@ const cartSlice = createSlice({
       state.changed = true;
       if (itemIndex >= 0) {
         if (state.items[itemIndex].quantity > 1) {
-          state.items[itemIndex].quantity -= 1; // decrease quantity
+          state.items[itemIndex].quantity -= 1;
         } else {
-          state.items.splice(itemIndex, 1); // remove completely if qty=0
+          state.items.splice(itemIndex, 1);
         }
       }
     },
     setCart(state, action) {
       state.items = action.payload || [];
+      state.changed = false;
     },
     clearCart(state) {
       state.items = [];
+      state.changed = true;
     },
   },
 });

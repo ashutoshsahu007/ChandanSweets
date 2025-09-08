@@ -10,10 +10,6 @@ export default function Cart() {
   // Calculate total
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-  const { userId, token } = useSelector((state) => state.auth);
-
-  const items = useSelector((state) => state.cart.items);
-
   const handleAddToCart = (product) => {
     dispatch(cartActions.addToCart(product));
   };

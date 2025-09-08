@@ -53,7 +53,7 @@ const Checkout = () => {
     try {
       // Save order to Firebase
       const res = await fetch(
-        "https://<YOUR_FIREBASE_PROJECT>.firebaseio.com/orders.json",
+        "https://restro-a8f84-default-rtdb.firebaseio.com/orders.json",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

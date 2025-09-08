@@ -1,37 +1,14 @@
 import { useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 const OrderConfirmation = () => {
   const location = useLocation();
-  const cartItems = useSelector((state) => state.cart.items || []);
 
   const orderFromState = location.state?.order ?? null;
 
-  let orderFromStorage = null;
-  try {
-    const raw = localStorage.getItem("lastOrder");
-    orderFromStorage = raw ? JSON.parse(raw) : null;
-  } catch (err) {
-    orderFromStorage = null;
-  }
+  console.log(orderFromState, "orderfromstate");
 
-  const fallbackOrder = cartItems.length
-    ? {
-        id: null,
-        status: "Pending",
-        items: cartItems,
-        deliveryDetails: null,
-        paymentMethod: null,
-        total: cartItems.reduce(
-          (acc, it) => acc + Number(it.price || 0) * Number(it.quantity || 1),
-          0
-        ),
-        createdAt: new Date().toISOString(),
-      }
-    : null;
-
-  const order = orderFromState || orderFromStorage || fallbackOrder;
+  const order = orderFromState;
 
   const orderId = useMemo(() => {
     if (order?.id) return order.id;

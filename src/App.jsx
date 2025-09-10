@@ -9,12 +9,12 @@ import OrderHistory from "./components/OrderHistory";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
-import CheckOut from "./components/CheckOut";
 import OrderConfirmation from "./components/OrderConfirmation";
 import NotFound from "./components/NotFound";
 import { cartActions } from "./store/cartSlice";
 import Recepies from "./components/Recepies";
 import Categories from "./components/Categories";
+import CheckOut from "./components/Checkout";
 
 let isInitial = false;
 

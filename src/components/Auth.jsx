@@ -113,7 +113,7 @@ const Auth = () => {
             : "bg-gradient-to-r from-orange-600 to-red-600"
         }`}
       >
-        Foodizz
+        Chandan Sweets
       </h1>
 
       {/* Auth Card */}

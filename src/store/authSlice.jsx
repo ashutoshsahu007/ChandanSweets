@@ -21,7 +21,6 @@ const authSlice = createSlice({
       localStorage.setItem("token", action.payload.token);
       localStorage.setItem("userId", action.payload.userId);
       localStorage.setItem("email", action.payload.email);
-      localStorage.setItem("loginTime", Date.now());
     },
     logout(state) {
       state.token = null;
@@ -31,7 +30,7 @@ const authSlice = createSlice({
       // clear localStorage
       localStorage.removeItem("token");
       localStorage.removeItem("userId");
-      localStorage.removeItem("loginTime");
+
       localStorage.removeItem("email");
     },
   },

@@ -44,8 +44,7 @@ export default function Profile() {
     }
 
     const res = await fetch(
-      `https://identitytoolkit.googleapis.com/v1/accounts:update?key=
-AIzaSyD72j2lhmkCkQtYdbqXIWSCcdNa7jHfBIs`,
+      `https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyD72j2lhmkCkQtYdbqXIWSCcdNa7jHfBIs`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,105 +57,94 @@ AIzaSyD72j2lhmkCkQtYdbqXIWSCcdNa7jHfBIs`,
       }
     );
 
+    const data = await res.json();
+
     if (res.ok) {
+      console.log("Profile updated:", data.displayName, data.photoUrl);
       setEdit(false);
     }
   };
 
   return (
-    <div className="mb-10 bg-gray-50">
-      {/* Banner + Card */}
-      <div className="flex flex-col  items-center text-gray-900 p-6">
-        {/* Banner */}
-        <div className="w-full max-w-3xl rounded-t-2xl h-40 bg-blue-600"></div>
+    <div className="min-h-screen py-12 flex flex-col items-center justify-center px-4 relative overflow-hidden bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 text-gray-900">
+      {/* Background Decorations */}
+      <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-orange-200 to-yellow-200 rounded-full opacity-30 blur-3xl"></div>
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-red-200 to-orange-200 rounded-full opacity-30 blur-3xl"></div>
 
-        {/* Card */}
-        <div className="w-full max-w-3xl rounded-b-2xl p-6 -mt-16 shadow-lg relative bg-white border border-gray-200">
-          {/* Avatar */}
-          <div className="absolute -top-12 left-6">
-            <img
-              src={photoURL}
-              alt="avatar"
-              className="w-24 h-24 rounded-full border-4 shadow-lg border-white"
-            />
+      {/* Profile Card */}
+      <div className="w-full max-w-3xl backdrop-blur-sm bg-white/80 border border-white/20 shadow-2xl rounded-3xl p-8 relative z-10">
+        {/* Avatar */}
+        <div className="flex items-center gap-6">
+          <img
+            src={photoURL}
+            alt="avatar"
+            className="w-28 h-28 rounded-full border-4 border-white shadow-lg"
+          />
+          <div>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+              {fullName}
+            </h2>
+            <p className="text-gray-600">Email: {email}</p>
           </div>
-
-          {/* Edit Button */}
           <button
             onClick={() => setEdit(!edit)}
-            className="absolute top-6 right-6 flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg cursor-pointer"
+            className="ml-auto flex items-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer"
           >
             <Pencil size={16} /> Edit
           </button>
+        </div>
 
-          {/* User Info */}
-          <div className="mt-16 space-y-1">
-            <h2 className="text-2xl font-bold">{fullName}</h2>
+        {/* Edit Form */}
+        {edit && (
+          <div className="mt-8 border-t border-gray-200 pt-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Update Profile
+            </h2>
 
-            <div className="mt-2 space-y-2">
-              <p className="text-sm opacity-70">Email: {email} </p>
+            <div className="space-y-4">
+              {/* Full Name */}
+              <div className="flex items-center gap-3">
+                <FaGithub className="text-xl text-gray-500" />
+                <input
+                  type="text"
+                  value={editFullName}
+                  onChange={(e) => setEditFullName(e.target.value)}
+                  placeholder="Full Name"
+                  className="flex-1 rounded-xl px-4 py-3 border bg-gray-50/50 border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:bg-white"
+                />
+              </div>
+
+              {/* Profile Photo URL */}
+              <div className="flex items-center gap-3">
+                <FaGlobe className="text-xl text-gray-500" />
+                <input
+                  type="text"
+                  value={editPhotoURL}
+                  onChange={(e) => setEditPhotoURL(e.target.value)}
+                  placeholder="Profile Photo URL"
+                  className="flex-1 rounded-xl px-4 py-3 border bg-gray-50/50 border-gray-300 text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 hover:bg-white"
+                />
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={() => setEdit(!edit)}
+                className="px-4 py-2 rounded-xl border border-red-300 text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpdate}
+                className="px-6 py-2 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transition-all cursor-pointer"
+              >
+                Update
+              </button>
             </div>
           </div>
-        </div>
+        )}
       </div>
-
-      {/* Edit Form */}
-      {edit && (
-        <div className="text-gray-900">
-          <div className="flex justify-center mt-8">
-            <div className="w-3/4 border p-6 rounded-md border-gray-300 bg-white">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-bold">Contact Details</h2>
-                <button
-                  onClick={() => setEdit(!edit)}
-                  className="cursor-pointer font-semibold border rounded px-3 py-1 text-red-500 border-red-300 hover:bg-red-50"
-                >
-                  Cancel
-                </button>
-              </div>
-
-              {/* Input Fields */}
-              <div className="flex items-center space-x-6">
-                {/* Full Name */}
-                <div className="flex items-center space-x-2 w-1/2">
-                  <FaGithub className="text-xl" />
-                  <label className="font-medium">Full Name:</label>
-                  <input
-                    type="text"
-                    value={editFullName}
-                    onChange={(e) => setEditFullName(e.target.value)}
-                    className="rounded px-2 py-1 flex-1 border bg-white border-gray-400 text-black"
-                  />
-                </div>
-
-                {/* Profile Photo URL */}
-                <div className="flex items-center space-x-2 w-1/2">
-                  <FaGlobe className="text-xl" />
-                  <label className="font-medium">Profile Photo URL</label>
-                  <input
-                    type="text"
-                    value={editPhotoURL}
-                    onChange={(e) => setEditPhotoURL(e.target.value)}
-                    className="rounded px-2 py-1 flex-1 border bg-white border-gray-400 text-black"
-                  />
-                </div>
-              </div>
-
-              {/* Update Button */}
-              <div className="mt-6">
-                <button
-                  onClick={handleUpdate}
-                  className="px-4 py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-700 text-white"
-                >
-                  Update
-                </button>
-              </div>
-
-              <hr className="mt-6 border-gray-300" />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

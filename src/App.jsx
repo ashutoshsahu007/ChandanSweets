@@ -9,7 +9,7 @@ import OrderHistory from "./components/OrderHistory";
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Profile from "./components/Profile";
-import Checkout from "./components/CheckOut";
+import CheckOut from "./components/CheckOut";
 import OrderConfirmation from "./components/OrderConfirmation";
 import NotFound from "./components/NotFound";
 import { cartActions } from "./store/cartSlice";
@@ -103,7 +103,7 @@ const App = () => {
         />
         <Route
           path="/checkout"
-          element={isLoggedIn ? <Checkout /> : <Navigate to="/" replace />}
+          element={isLoggedIn ? <CheckOut /> : <Navigate to="/" replace />}
         />
         <Route
           path="/order-confirmation"

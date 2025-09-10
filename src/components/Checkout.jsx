@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { cartActions } from "../store/cartSlice";
 
-const Checkout = () => {
+const CheckOut = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const { userId } = useSelector((state) => state.auth); // logged-in userId
   const navigate = useNavigate();
@@ -208,4 +208,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default CheckOut;

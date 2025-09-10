@@ -59,32 +59,51 @@ export default function ForgotPassword() {
       className={`h-screen flex items-center justify-center px-4 relative overflow-hidden transition-colors duration-300
       ${
         darkMode
-          ? "bg-gray-900 text-gray-100"
-          : "bg-gradient-to-br from-indigo-50 via-white to-cyan-50"
+          ? "bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-100"
+          : "bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 text-gray-900"
       }`}
     >
       {/* Background decorations */}
-      {!darkMode && (
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-200 to-purple-200 rounded-full opacity-20 blur-3xl"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-cyan-200 to-blue-200 rounded-full opacity-20 blur-3xl"></div>
-        </div>
-      )}
+      <div className="absolute inset-0 overflow-hidden">
+        {darkMode ? (
+          <>
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-orange-900 to-red-900 rounded-full opacity-20 blur-3xl"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-gray-700 to-gray-800 rounded-full opacity-20 blur-3xl"></div>
+          </>
+        ) : (
+          <>
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-orange-200 to-yellow-200 rounded-full opacity-30 blur-3xl"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-red-200 to-orange-200 rounded-full opacity-30 blur-3xl"></div>
+          </>
+        )}
+      </div>
 
       {/* Reset Card */}
       <div
         className={`backdrop-blur-sm shadow-2xl rounded-3xl p-8 w-full max-w-md border relative z-10 transition-colors duration-300
         ${
           darkMode
-            ? "bg-gray-800 border-gray-700"
+            ? "bg-gray-800/80 border-gray-700"
             : "bg-white/80 border-white/20"
         }`}
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-4 shadow-lg">
+          <div
+            className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-lg ${
+              darkMode
+                ? "bg-gradient-to-br from-orange-500 to-red-600"
+                : "bg-gradient-to-br from-orange-500 to-yellow-500"
+            }`}
+          >
             <Sparkles className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+          <h1
+            className={`text-3xl font-bold bg-clip-text text-transparent mb-2 ${
+              darkMode
+                ? "bg-gradient-to-r from-orange-400 to-red-500"
+                : "bg-gradient-to-r from-orange-600 to-red-600"
+            }`}
+          >
             Reset Password
           </h1>
           <p
@@ -108,7 +127,7 @@ export default function ForgotPassword() {
             <input
               type="email"
               placeholder="Enter your email address"
-              className={`w-full border rounded-xl pl-12 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200
+              className={`w-full border rounded-xl pl-12 pr-4 py-3.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200
               ${
                 darkMode
                   ? "bg-gray-700 border-gray-600 placeholder-gray-500 text-gray-100"
@@ -122,7 +141,7 @@ export default function ForgotPassword() {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 cursor-pointer hover:from-indigo-700 hover:to-purple-700 text-white py-3.5 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white rounded-xl py-3.5 font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none cursor-pointer"
             disabled={loading}
           >
             {loading ? (
@@ -188,8 +207,8 @@ export default function ForgotPassword() {
             className={`inline-flex items-center space-x-2 text-sm font-medium transition-colors duration-200 group
             ${
               darkMode
-                ? "text-indigo-400 hover:text-indigo-300"
-                : "text-indigo-600 hover:text-indigo-700"
+                ? "text-orange-400 hover:text-orange-300"
+                : "text-orange-600 hover:text-orange-700"
             }`}
           >
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform duration-200" />

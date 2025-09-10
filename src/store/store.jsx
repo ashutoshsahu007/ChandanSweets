@@ -4,12 +4,11 @@ import cartReducer from "./cartSlice";
 
 const storedToken = localStorage.getItem("token");
 const storedUserId = localStorage.getItem("userId");
-const storedLoginTime = Number(localStorage.getItem("loginTime"));
 const storedEmail = localStorage.getItem("email");
 
 let isLoggedIn = false;
 
-if (storedToken && storedUserId && storedLoginTime) {
+if (storedToken && storedUserId) {
   isLoggedIn = true;
 }
 
